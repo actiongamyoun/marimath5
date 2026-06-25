@@ -1,0 +1,14 @@
+{
+  "name": "마리수학 — 스스로 푸는 힘",
+  "short_name": "마리수학",
+  "description": "초등 6학년 자기주도 수학 학습 코칭앱. 정답을 알려주지 않고, 스스로 푸는 힘을 키웁니다.",
+  "start_url": "./index.html",
+  "display": "standalone",
+  "background_color": "#f7f9fb",
+  "theme_color": "#14b8a6",
+  "orientation": "portrait",
+  "icons": [
+    { "src": "icon-192.png", "sizes": "192x192", "type": "image/png", "purpose": "any maskable" },
+    { "src": "icon-512.png", "sizes": "512x512", "type": "image/png", "purpose": "any maskable" }
+  ]
+}

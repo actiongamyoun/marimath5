@@ -1,0 +1,204 @@
+/* ===================================================================
+   마리수학 (Mari Math) — 디자인 시스템
+   초등 6학년 자기주도 학습 코칭앱
+   철학: 가르치지 않는다. 스스로 푸는 힘을 키운다.
+   =================================================================== */
+
+:root {
+  /* ── 색상: 따뜻한 청록(brand) + 보조 ── */
+  --brand:        #14b8a6;   /* teal — 차분하고 신뢰감, 유치하지 않음 */
+  --brand-deep:   #0d9488;
+  --brand-soft:   #d6f5f0;
+  --brand-tint:   #ecfdf9;
+
+  --coral:        #ff6b6b;   /* 따뜻한 강조 (격려, 하트) */
+  --amber:        #fbbf24;   /* 코인, 별 */
+  --violet:       #8b7cf6;   /* 메타인지, 생각 */
+  --green:        #34d399;   /* 정답, 성공 */
+  --sky:          #38bdf8;   /* 정보 */
+
+  /* ── 중립 (라이트) ── */
+  --bg:           #f7f9fb;
+  --surface:      #ffffff;
+  --surface-2:    #f1f4f7;
+  --border:       #e6ebf0;
+  --border-strong:#d2dae2;
+  --ink:          #1a2530;   /* 본문 */
+  --ink-soft:     #5b6875;   /* 보조 텍스트 */
+  --ink-faint:    #9aa6b2;   /* 흐린 텍스트 */
+
+  --shadow-sm: 0 1px 3px rgba(20,40,60,0.06);
+  --shadow:    0 4px 16px rgba(20,40,60,0.08);
+  --shadow-lg: 0 12px 32px rgba(20,40,60,0.12);
+  --shadow-btn: 0 4px 0;
+
+  /* ── 모양 ── */
+  --r-sm: 12px;
+  --r-md: 16px;
+  --r-lg: 22px;
+  --r-xl: 28px;
+  --r-pill: 999px;
+
+  --font: 'Pretendard', -apple-system, BlinkMacSystemFont, system-ui, sans-serif;
+
+  --maxw: 520px;  /* 모바일 우선, 중앙 정렬 */
+}
+
+[data-theme="dark"] {
+  --brand:        #2dd4bf;
+  --brand-deep:   #14b8a6;
+  --brand-soft:   #133b38;
+  --brand-tint:   #0f2b29;
+
+  --bg:           #0e1419;
+  --surface:      #18212a;
+  --surface-2:    #1f2a35;
+  --border:       #2a3742;
+  --border-strong:#3a4855;
+  --ink:          #eef3f7;
+  --ink-soft:     #a9b6c2;
+  --ink-faint:    #6b7884;
+
+  --shadow-sm: 0 1px 3px rgba(0,0,0,0.3);
+  --shadow:    0 4px 16px rgba(0,0,0,0.35);
+  --shadow-lg: 0 12px 32px rgba(0,0,0,0.45);
+}
+
+/* ── 리셋 ── */
+* { box-sizing: border-box; margin: 0; padding: 0; -webkit-tap-highlight-color: transparent; }
+html, body { height: 100%; }
+body {
+  font-family: var(--font);
+  background: var(--bg);
+  color: var(--ink);
+  font-weight: 500;
+  line-height: 1.5;
+  -webkit-font-smoothing: antialiased;
+  overflow: hidden;
+  position: fixed;
+  width: 100%;
+  overscroll-behavior: none;
+}
+.icon { font-family: 'Material Symbols Rounded'; font-style: normal; font-weight: normal; line-height: 1; vertical-align: middle; -webkit-font-feature-settings: 'liga'; font-feature-settings: 'liga'; }
+button { font-family: inherit; cursor: pointer; border: none; background: none; color: inherit; }
+input { font-family: inherit; }
+
+/* ── 앱 셸: 모바일 중앙 정렬 ── */
+#app {
+  height: 100dvh;
+  max-width: var(--maxw);
+  margin: 0 auto;
+  position: relative;
+  background: var(--bg);
+  overflow: hidden;
+}
+
+/* ── 화면 전환 ── */
+.screen {
+  position: absolute;
+  inset: 0;
+  display: none;
+  flex-direction: column;
+  opacity: 0;
+  transition: opacity 0.25s ease;
+}
+.screen.active { display: flex; opacity: 1; }
+
+/* ── 버튼 ── */
+.btn {
+  display: inline-flex; align-items: center; justify-content: center; gap: 8px;
+  font-weight: 800; font-size: 16px; letter-spacing: -0.2px;
+  padding: 15px 24px; border-radius: var(--r-md);
+  color: #fff; background: var(--brand);
+  box-shadow: var(--shadow-btn) var(--brand-deep);
+  transition: transform 0.1s, box-shadow 0.1s, filter 0.1s;
+}
+.btn:active { transform: translateY(4px); box-shadow: 0 0 0 transparent; }
+.btn:disabled { opacity: 0.4; pointer-events: none; }
+.btn .icon { font-size: 20px; }
+.btn-lg { font-size: 18px; padding: 17px 28px; border-radius: var(--r-lg); }
+.btn-block { width: 100%; }
+
+.btn-coral { background: var(--coral); box-shadow: var(--shadow-btn) #e85555; }
+.btn-amber { background: var(--amber); box-shadow: var(--shadow-btn) #e0a818; color: #4a3500; }
+.btn-violet { background: var(--violet); box-shadow: var(--shadow-btn) #7059e8; }
+.btn-green { background: var(--green); box-shadow: var(--shadow-btn) #28b87f; }
+
+.btn-ghost {
+  background: var(--surface); color: var(--ink);
+  border: 2px solid var(--border-strong);
+  box-shadow: var(--shadow-btn) var(--border-strong);
+}
+[data-theme="dark"] .btn-ghost { background: var(--surface-2); }
+
+.btn-quiet {
+  background: transparent; color: var(--ink-soft); box-shadow: none;
+  font-weight: 700;
+}
+.btn-quiet:active { transform: none; }
+
+/* ── 상단 바 ── */
+.appbar {
+  display: flex; align-items: center; gap: 12px;
+  padding: 14px 16px;
+  flex-shrink: 0;
+}
+.appbar .icon-btn {
+  width: 40px; height: 40px; border-radius: var(--r-sm);
+  display: flex; align-items: center; justify-content: center;
+  background: var(--surface); border: 1px solid var(--border);
+  color: var(--ink); flex-shrink: 0;
+}
+.appbar .icon-btn .icon { font-size: 22px; }
+.appbar .bar-title { font-weight: 800; font-size: 18px; flex: 1; letter-spacing: -0.3px; }
+
+/* 칩 (코인/연속 등) */
+.chip {
+  display: inline-flex; align-items: center; gap: 5px;
+  padding: 7px 12px; border-radius: var(--r-pill);
+  background: var(--surface); border: 1px solid var(--border);
+  font-weight: 800; font-size: 14px;
+}
+.chip .icon { font-size: 18px; }
+.chip.coin { color: #d98e00; }
+.chip.coin .icon { color: var(--amber); }
+.chip.streak { color: #e85555; }
+.chip.streak .icon { color: var(--coral); }
+
+/* ── 카드 ── */
+.card {
+  background: var(--surface);
+  border: 1px solid var(--border);
+  border-radius: var(--r-lg);
+  padding: 18px;
+  box-shadow: var(--shadow-sm);
+}
+
+/* ── 스크롤 영역 ── */
+.scroll {
+  flex: 1; overflow-y: auto; -webkit-overflow-scrolling: touch;
+  padding: 4px 16px 24px;
+}
+.scroll::-webkit-scrollbar { width: 6px; }
+.scroll::-webkit-scrollbar-thumb { background: var(--border-strong); border-radius: 3px; }
+
+/* 섹션 라벨 */
+.section-label {
+  display: flex; align-items: center; gap: 7px;
+  font-size: 13px; font-weight: 800; color: var(--ink-soft);
+  letter-spacing: 0.3px; text-transform: none;
+  margin: 22px 2px 12px;
+}
+.section-label .icon { font-size: 18px; color: var(--brand); }
+.section-label:first-child { margin-top: 8px; }
+
+/* 공통 모션 */
+@keyframes pop-in { from { opacity: 0; transform: scale(0.92) translateY(8px); } to { opacity: 1; transform: scale(1) translateY(0); } }
+@keyframes float-y { 0%,100% { transform: translateY(0); } 50% { transform: translateY(-8px); } }
+@keyframes fade-up { from { opacity: 0; transform: translateY(16px); } to { opacity: 1; transform: translateY(0); } }
+.bob { animation: float-y 3.2s ease-in-out infinite; }
+
+@media (prefers-reduced-motion: reduce) {
+  *, *::before, *::after { animation-duration: 0.01ms !important; transition-duration: 0.05ms !important; }
+  .bob { animation: none; }
+}

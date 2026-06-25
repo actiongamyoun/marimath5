@@ -1,0 +1,238 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no, viewport-fit=cover">
+<meta name="theme-color" content="#14b8a6">
+<meta name="mobile-web-app-capable" content="yes">
+<meta name="apple-mobile-web-app-capable" content="yes">
+<meta name="apple-mobile-web-app-status-bar-style" content="default">
+<title>마리수학 — 스스로 푸는 힘</title>
+<link rel="manifest" href="manifest.json">
+<link rel="apple-touch-icon" href="icon-180.png">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://cdn.jsdelivr.net/gh/orioncactus/pretendard@v1.3.9/dist/web/static/pretendard.css" rel="stylesheet">
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Rounded:opsz,wght,FILL,GRAD@24,400,1,0" rel="stylesheet">
+<link rel="stylesheet" href="css/base.css">
+<link rel="stylesheet" href="css/screens.css">
+<script>
+  // 테마 즉시 적용 (깜빡임 방지)
+  (function(){
+    try {
+      var t = localStorage.getItem('marimath_theme');
+      if (!t) t = window.matchMedia('(prefers-color-scheme: dark)').matches ? 'dark' : 'light';
+      document.documentElement.setAttribute('data-theme', t);
+    } catch(e){}
+  })();
+</script>
+</head>
+<body>
+<div id="app">
+
+  <!-- ════════ 온보딩 ════════ -->
+  <section class="screen" id="sc-onboard">
+    <div class="onboard">
+      <div class="onboard-mascot bob" id="onb-mascot"></div>
+      <div class="onboard-bubble" id="onb-bubble">안녕! 난 마리야 🍊<br>너랑 같이 수학 공부할 친구야.</div>
+
+      <!-- 이름 -->
+      <div class="onboard-step" id="onb-name">
+        <div class="onboard-q">네 이름을 알려줄래?</div>
+        <input type="text" id="onb-name-input" class="onboard-input" placeholder="이름" maxlength="10" autocomplete="off">
+        <button class="btn btn-block" data-act="onb-next">다음 <i class="icon">arrow_forward</i></button>
+      </div>
+
+      <!-- 학년 -->
+      <div class="onboard-step" id="onb-grade" hidden>
+        <div class="onboard-q"><b id="onb-name-echo">친구</b>야, 몇 학년이야?</div>
+        <div class="onboard-grades">
+          <button class="onboard-grade" data-grade="5">5학년</button>
+          <button class="onboard-grade" data-grade="6">6학년</button>
+        </div>
+        <button class="btn btn-block" id="onb-finish" data-act="onb-finish" disabled>시작하기 <i class="icon">rocket_launch</i></button>
+      </div>
+    </div>
+  </section>
+
+  <!-- ════════ 홈 ════════ -->
+  <section class="screen" id="sc-home">
+    <div class="appbar">
+      <div class="home-id">
+        <div class="home-avatar" id="home-avatar">마</div>
+        <div class="home-id-text">
+          <div class="home-name" id="home-name">친구</div>
+          <div class="home-sub" id="home-sub">6학년</div>
+        </div>
+      </div>
+      <div style="flex:1"></div>
+      <div class="chip streak"><i class="icon">local_fire_department</i><span id="home-streak">0</span></div>
+      <div class="chip coin"><i class="icon">star</i><span id="home-stars">0</span></div>
+      <button class="icon-btn" data-act="theme" title="화면 모드"><i class="icon" id="theme-icon">dark_mode</i></button>
+      <button class="icon-btn" data-act="parent" title="부모"><i class="icon">family_restroom</i></button>
+    </div>
+
+    <div class="scroll">
+      <!-- 마리 인사 -->
+      <div class="home-hero">
+        <div class="home-hero-mascot bob" id="home-mascot"></div>
+        <div class="home-hero-text">
+          <div class="home-greeting" id="home-greeting">안녕!</div>
+          <div class="home-greeting-sub" id="home-greeting-sub">오늘도 같이 해볼까?</div>
+        </div>
+      </div>
+
+      <!-- 오늘 목표 카드 -->
+      <div class="today-card" id="today-card"></div>
+
+      <!-- 큰 시작 버튼 -->
+      <button class="btn btn-lg btn-block start-btn" data-act="start-study">
+        <i class="icon">play_arrow</i> 오늘 공부 시작
+      </button>
+
+      <!-- 단원 골라 풀기 -->
+      <div class="section-label"><i class="icon">menu_book</i> 단원 골라서 풀기</div>
+      <div class="unit-list" id="unit-list"></div>
+    </div>
+  </section>
+
+  <!-- ════════ 문제 풀이 ════════ -->
+  <section class="screen" id="sc-solve">
+    <div class="solve-top">
+      <button class="icon-btn" data-act="quit-solve"><i class="icon">close</i></button>
+      <div class="solve-progress"><div class="solve-progress-bar" id="solve-bar"></div></div>
+      <div class="solve-count" id="solve-count">1/5</div>
+    </div>
+
+    <div class="solve-body">
+      <!-- 문제 -->
+      <div class="solve-question">
+        <div class="solve-q-tags">
+          <span class="q-unit" id="q-unit">단원</span>
+          <span class="q-level" id="q-level">★</span>
+        </div>
+        <div class="solve-q-text" id="q-text">문제</div>
+      </div>
+
+      <!-- 펜 캔버스 -->
+      <div class="solve-canvas">
+        <div class="canvas-tools">
+          <button class="tool active" data-tool="pen" title="펜"><i class="icon">edit</i></button>
+          <button class="tool" data-tool="eraser" title="지우개"><i class="icon">ink_eraser</i></button>
+          <button class="tool" data-act="clear-pad" title="전부 지우기"><i class="icon">mop</i></button>
+          <div style="flex:1"></div>
+          <span class="canvas-hint">여기에 직접 풀어봐 ✏️</span>
+        </div>
+        <div class="canvas-wrap">
+          <canvas id="pad"></canvas>
+        </div>
+      </div>
+    </div>
+
+    <!-- 하단: 다 풀었으면 -->
+    <div class="solve-foot">
+      <button class="btn btn-lg btn-block" data-act="done-solving">
+        <i class="icon">check</i> 다 풀었어
+      </button>
+    </div>
+  </section>
+
+  <!-- ════════ 자기확인 (메타인지 핵심) ════════ -->
+  <section class="screen" id="sc-check">
+    <div class="check-body">
+      <div class="check-mascot" id="check-mascot"></div>
+      <div class="check-title">스스로 확인해볼까?</div>
+      <div class="check-q" id="check-q">문제</div>
+
+      <!-- 1단계: 자신감 묻기 (정답 보기 전) -->
+      <div class="check-stage" id="check-confidence">
+        <div class="check-ask">답을 적었어. 얼마나 자신 있어?</div>
+        <div class="confidence-btns">
+          <button class="conf-btn sure" data-conf="sure">
+            <i class="icon">sentiment_very_satisfied</i>
+            <span>자신 있어</span>
+          </button>
+          <button class="conf-btn unsure" data-conf="unsure">
+            <i class="icon">sentiment_neutral</i>
+            <span>잘 모르겠어</span>
+          </button>
+          <button class="conf-btn guess" data-conf="guess">
+            <i class="icon">sentiment_dissatisfied</i>
+            <span>그냥 찍었어</span>
+          </button>
+        </div>
+      </div>
+
+      <!-- 2단계: 정답 공개 + 맞췄는지 스스로 채점 -->
+      <div class="check-stage" id="check-reveal" hidden>
+        <div class="reveal-answer">
+          <div class="reveal-label">정답</div>
+          <div class="reveal-value" id="reveal-value">답</div>
+        </div>
+        <div class="check-ask">네가 푼 답과 같아?</div>
+        <div class="grade-btns">
+          <button class="grade-btn correct" data-grade="correct">
+            <i class="icon">check_circle</i> 맞았어!
+          </button>
+          <button class="grade-btn wrong" data-grade="wrong">
+            <i class="icon">cancel</i> 틀렸어
+          </button>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- ════════ 세션 결과 ════════ -->
+  <section class="screen" id="sc-result">
+    <div class="result-body">
+      <div class="result-mascot bob" id="result-mascot"></div>
+      <div class="result-title" id="result-title">잘했어!</div>
+      <div class="result-coach" id="result-coach"></div>
+
+      <div class="result-stats" id="result-stats"></div>
+
+      <!-- 메타인지 피드백 -->
+      <div class="meta-feedback" id="meta-feedback"></div>
+
+      <div class="result-actions">
+        <button class="btn btn-lg btn-block" data-act="result-home">
+          <i class="icon">home</i> 홈으로
+        </button>
+        <button class="btn btn-ghost btn-block" id="review-btn" data-act="start-review" hidden>
+          <i class="icon">replay</i> 틀린 문제 다시 풀기
+        </button>
+      </div>
+    </div>
+  </section>
+
+  <!-- ════════ 부모 ════════ -->
+  <section class="screen" id="sc-parent">
+    <div class="appbar">
+      <button class="icon-btn" data-act="parent-back"><i class="icon">arrow_back</i></button>
+      <div class="bar-title">부모님 공간</div>
+    </div>
+    <div class="scroll" id="parent-scroll"></div>
+  </section>
+
+  <!-- ════════ 코칭 말풍선 모달 ════════ -->
+  <div class="modal-bg" id="modal">
+    <div class="modal-card" id="modal-card"></div>
+  </div>
+
+</div>
+
+<!-- 데이터 -->
+<script src="data/units.js"></script>
+<script src="data/q_fracdiv.js"></script>
+<script src="data/q_decdiv.js"></script>
+<script src="data/q_prism.js"></script>
+<script src="data/index.js"></script>
+<!-- 로직 -->
+<script src="js/theme.js"></script>
+<script src="js/mascot.js"></script>
+<script src="js/state.js"></script>
+<script src="js/canvas.js"></script>
+<script src="js/coach.js"></script>
+<script src="js/app.js"></script>
+</body>
+</html>
