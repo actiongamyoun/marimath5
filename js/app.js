@@ -19,6 +19,8 @@ window.show = show;
 
 const esc = s => String(s).replace(/[&<>"]/g, c => ({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;'}[c]));
 const mascot = (mood, size) => window.mascotSVG ? window.mascotSVG(mood, size) : '';
+// 학년 라벨: 6 → "초6", 7 → "중1"
+const gradeLabel = g => g === 7 ? '중1' : `초${g}`;
 
 // 분수 표기 변환: 텍스트의 [[a/b]] 또는 [[w_a/b]](대분수)를 세로 분수 HTML로
 // 먼저 HTML 이스케이프한 뒤, 분수 토큰만 마크업으로 치환 (XSS 안전)
@@ -68,7 +70,7 @@ function renderHome() {
 
   document.getElementById('home-avatar').textContent = name.charAt(0);
   document.getElementById('home-name').textContent = name;
-  document.getElementById('home-sub').textContent = `${st.grade}학년`;
+  document.getElementById('home-sub').textContent = gradeLabel(st.grade);
   document.getElementById('home-streak').textContent = st.streak || 0;
   document.getElementById('home-stars').textContent = st.stars || 0;
   document.getElementById('theme-icon').textContent =
@@ -140,7 +142,8 @@ function renderTodayCard() {
 function renderUnitList() {
   const list = document.getElementById('unit-list');
   list.innerHTML = '';
-  window.UNITS.forEach(u => {
+  const units = window.getUnitsByGrade(window.STATE.grade);
+  units.forEach(u => {
     const m = window.unitMastery(u.id);
     const count = window.unitQuestionCount(u.id);
     const barColor = m < 40 ? 'var(--coral)' : m < 75 ? 'var(--amber)' : 'var(--green)';
@@ -336,9 +339,9 @@ function renderParent() {
   const acc = totalSolved > 0 ? Math.round(totalCorrect / totalSolved * 100) : 0;
   const metaScore = window.metacognitionScore();
 
-  // 단원별 진행
+  // 단원별 진행 (현재 학년)
   let unitRows = '';
-  window.UNITS.forEach(u => {
+  window.getUnitsByGrade(st.grade).forEach(u => {
     const m = window.unitMastery(u.id);
     const p = st.unitProgress[u.id];
     const color = m < 40 ? 'var(--coral)' : m < 75 ? 'var(--amber)' : 'var(--green)';
@@ -360,8 +363,8 @@ function renderParent() {
       <div class="pc-row">
         <label>학년</label>
         <div class="pc-grades">
-          <button class="pc-grade ${st.grade===5?'sel':''}" data-pgrade="5">5학년</button>
-          <button class="pc-grade ${st.grade===6?'sel':''}" data-pgrade="6">6학년</button>
+          <button class="pc-grade ${st.grade===6?'sel':''}" data-pgrade="6">초6</button>
+          <button class="pc-grade ${st.grade===7?'sel':''}" data-pgrade="7">중1</button>
         </div>
       </div>
       <button class="btn btn-block" data-act="save-parent" style="margin-top:6px"><i class="icon">save</i> 저장</button>

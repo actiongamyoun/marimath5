@@ -1,5 +1,5 @@
 // sw.js — 마리수학 Service Worker
-const VERSION = 'v2';
+const VERSION = 'v3';
 const CACHE = `marimath-${VERSION}`;
 
 const ASSETS = [
@@ -17,6 +17,8 @@ const ASSETS = [
   './data/q_fracdiv.js',
   './data/q_decdiv.js',
   './data/q_prism.js',
+  './data/q_m1a.js',
+  './data/q_m1b.js',
   './data/index.js',
 ];
 

@@ -5,7 +5,12 @@ window.ALL_QUESTIONS = [].concat(
   window.Q_decdiv || [],
   window.Q_ratio || [],
   window.Q_graph || [],
-  window.Q_volume || []
+  window.Q_volume || [],
+  // 중1
+  window.Q_factor || [],
+  window.Q_integer || [],
+  window.Q_letter || [],
+  window.Q_equation || []
 );
 
 // 단원별 문제

@@ -143,9 +143,10 @@ window.metacognitionScore = function() {
   return Math.round(match / log.length * 100);
 };
 
-// ── 약한 단원 찾기 ──
+// ── 약한 단원 찾기 (현재 학년 안에서) ──
 window.weakestUnit = function() {
-  const units = window.UNITS;
+  const units = window.getUnitsByGrade(window.STATE.grade);
+  if (units.length === 0) return window.UNITS[0];
   let weakest = units[0], lowest = 101;
   units.forEach(u => {
     const p = window.STATE.unitProgress[u.id];
@@ -154,7 +155,6 @@ window.weakestUnit = function() {
       if (m < lowest) { lowest = m; weakest = u; }
     }
   });
-  // 아직 푼 게 거의 없으면 첫 단원
   return weakest;
 };
 
