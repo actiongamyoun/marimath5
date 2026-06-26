@@ -20,6 +20,20 @@ window.show = show;
 const esc = s => String(s).replace(/[&<>"]/g, c => ({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;'}[c]));
 const mascot = (mood, size) => window.mascotSVG ? window.mascotSVG(mood, size) : '';
 
+// 분수 표기 변환: 텍스트의 [[a/b]] 또는 [[w_a/b]](대분수)를 세로 분수 HTML로
+// 먼저 HTML 이스케이프한 뒤, 분수 토큰만 마크업으로 치환 (XSS 안전)
+function renderMath(text) {
+  let s = esc(text);
+  // 대분수: [[2_1/3]] → 2와 1/3
+  s = s.replace(/\[\[(\d+)_(\d+)\/(\d+)\]\]/g, (_, w, n, d) =>
+    `<span class="mixed"><span class="whole">${w}</span><span class="frac"><span class="num">${n}</span><span class="den">${d}</span></span></span>`);
+  // 단순 분수: [[3/4]] → 세로 분수
+  s = s.replace(/\[\[(\d+)\/(\d+)\]\]/g, (_, n, d) =>
+    `<span class="frac"><span class="num">${n}</span><span class="den">${d}</span></span>`);
+  return s;
+}
+window.renderMath = renderMath;
+
 // ════════ 온보딩 ════════
 let onbGrade = null;
 
@@ -193,7 +207,7 @@ function loadQuestion() {
   const unit = window.getUnit(q.unit);
   document.getElementById('q-unit').textContent = unit ? unit.short : '';
   document.getElementById('q-level').textContent = '★'.repeat(q.level);
-  document.getElementById('q-text').textContent = q.q;
+  document.getElementById('q-text').innerHTML = renderMath(q.q);
   document.getElementById('solve-count').textContent = `${session.idx + 1}/${session.questions.length}`;
   document.getElementById('solve-bar').style.width = `${(session.idx) / session.questions.length * 100}%`;
 
@@ -216,7 +230,7 @@ let currentConfidence = null;
 function renderCheck() {
   const q = session.questions[session.idx];
   document.getElementById('check-mascot').innerHTML = mascot('think', 76);
-  document.getElementById('check-q').textContent = q.q;
+  document.getElementById('check-q').innerHTML = renderMath(q.q);
   // 1단계: 자신감
   document.getElementById('check-confidence').hidden = false;
   document.getElementById('check-reveal').hidden = true;
@@ -227,7 +241,7 @@ function renderCheck() {
 function chooseConfidence(conf) {
   currentConfidence = conf;
   const q = session.questions[session.idx];
-  document.getElementById('reveal-value').textContent = q.answerLabel || q.answer;
+  document.getElementById('reveal-value').innerHTML = renderMath(q.answerLabel || q.answer);
   document.getElementById('check-confidence').hidden = true;
   document.getElementById('check-reveal').hidden = false;
   // 마리 표정 살짝 바꿈

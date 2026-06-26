@@ -1,5 +1,5 @@
 // sw.js — 마리수학 Service Worker
-const VERSION = 'v1';
+const VERSION = 'v2';
 const CACHE = `marimath-${VERSION}`;
 
 const ASSETS = [

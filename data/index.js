@@ -18,10 +18,27 @@ window.unitQuestionCount = function(unitId) {
   return window.getQuestionsByUnit(unitId).length;
 };
 
-// 한 세션용 문제 뽑기 (해당 단원에서 n개, 난이도 순으로)
+// 한 세션용 문제 뽑기 — 계산과 문장제를 섞어서, 쉬운 것부터
 window.pickSession = function(unitId, n) {
-  const qs = window.getQuestionsByUnit(unitId).slice().sort((a, b) => a.level - b.level);
-  return qs.slice(0, n || qs.length);
+  n = n || 5;
+  const all = window.getQuestionsByUnit(unitId).slice();
+  const calc = all.filter(q => q.kind !== 'word').sort((a, b) => a.level - b.level);
+  const word = all.filter(q => q.kind === 'word').sort((a, b) => a.level - b.level);
+
+  // 계산:문장제를 번갈아 섞기 (대략 반반)
+  const mixed = [];
+  let i = 0, j = 0;
+  while (mixed.length < n && (i < calc.length || j < word.length)) {
+    if (i < calc.length) mixed.push(calc[i++]);
+    if (mixed.length >= n) break;
+    if (j < word.length) mixed.push(word[j++]);
+  }
+  // 부족하면 남은 것 채우기
+  if (mixed.length < n) {
+    all.filter(q => !mixed.includes(q)).forEach(q => { if (mixed.length < n) mixed.push(q); });
+  }
+  // 전체적으로 난이도 순 정렬 (계산/문장제 섞인 채로)
+  return mixed.slice(0, n).sort((a, b) => a.level - b.level);
 };
 
 // 정답 채점 (사용자가 입력한 답 vs 정답)

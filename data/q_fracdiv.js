@@ -1,72 +1,90 @@
-// data/q_fracdiv.js
-// 분수의 나눗셈 — 문제
-// 각 문제: id, unit, level(1~3), q(문제), answer(정답, 채점·자기확인용),
-//          answerLabel(정답 표기), hint1/hint2/hint3 (스스로 생각 유도 — 정답 직접노출 X), think(메타 질문)
-// 철학: 힌트는 "답"이 아니라 "생각의 실마리". 정답은 아이가 푼 뒤 자기확인 단계에서만.
+// data/q_fracdiv.js — 분수의 나눗셈
+// 분수 표기: [[분자/분모]], 대분수: [[정수_분자/분모]]
+// answerLabel도 같은 표기 사용 → 세로 분수로 렌더링
+// 계산 문제와 읽고 푸는 문장제를 반반으로 구성
 
 window.Q_fracdiv = [
+  // ── 계산 ──
   {
-    id: 'fracdiv-1', unit: 'fracdiv', level: 1,
+    id: 'fracdiv-1', unit: 'fracdiv', level: 1, kind: 'calc',
     q: '6 ÷ 3 을 분수로 나타내면 어떻게 쓸까?',
-    answer: '6/3', answerLabel: '6/3 ( = 2 )',
+    answer: '6/3', answerLabel: '[[6/3]] ( = 2 )',
     hint1: '나눗셈 ➗ 는 분수로 바꿀 수 있어. 앞의 수가 분자(위), 뒤의 수가 분모(아래)야.',
     hint2: '6이 위로, 3이 아래로 가면 어떤 모양일까?',
     think: '나눗셈을 분수로 바꾸는 규칙을 한 문장으로 말해볼 수 있어?',
   },
   {
-    id: 'fracdiv-2', unit: 'fracdiv', level: 1,
-    q: '1/2 ÷ 3 은 얼마일까?',
-    answer: '1/6', answerLabel: '1/6',
+    id: 'fracdiv-2', unit: 'fracdiv', level: 1, kind: 'calc',
+    q: '[[1/2]] ÷ 3 은 얼마일까?',
+    answer: '1/6', answerLabel: '[[1/6]]',
     hint1: '분수를 자연수로 나눌 때는, 분모에 그 자연수를 곱해보자.',
     hint2: '분모 2에 3을 곱하면? 분자는 그대로 1이야.',
-    think: '왜 분모에 곱하는 걸까? 1/2을 3등분하면 더 작아지는 걸 생각해봐.',
+    think: '왜 분모에 곱하는 걸까? 절반을 다시 3등분하면 더 작아지는 걸 생각해봐.',
   },
   {
-    id: 'fracdiv-3', unit: 'fracdiv', level: 1,
-    q: '4/5 ÷ 2 를 계산해봐.',
-    answer: '2/5', answerLabel: '2/5',
+    id: 'fracdiv-3', unit: 'fracdiv', level: 1, kind: 'calc',
+    q: '[[4/5]] ÷ 2 를 계산해봐.',
+    answer: '2/5', answerLabel: '[[2/5]]',
     hint1: '분자 4를 2로 나눌 수 있는지 먼저 봐. 나누어떨어지면 더 간단해져.',
     hint2: '4 ÷ 2 = 2, 분모 5는 그대로 둬도 될까?',
     think: '분자가 자연수로 나누어떨어질 때와 아닐 때, 방법이 어떻게 달라질까?',
   },
   {
-    id: 'fracdiv-4', unit: 'fracdiv', level: 2,
-    q: '3/4 ÷ 1/2 은 얼마일까?',
-    answer: '3/2', answerLabel: '3/2 ( = 1과 1/2 )',
+    id: 'fracdiv-4', unit: 'fracdiv', level: 2, kind: 'calc',
+    q: '[[3/4]] ÷ [[1/2]] 은 얼마일까?',
+    answer: '3/2', answerLabel: '[[3/2]] ( = [[1_1/2]] )',
     hint1: '분수 ➗ 분수는 "뒤 분수를 뒤집어서 곱하기"로 바꿀 수 있어.',
-    hint2: '1/2을 뒤집으면 2/1이야. 그럼 3/4 × 2/1 이 되겠지?',
+    hint2: '뒤 분수를 뒤집으면 분모와 분자가 바뀌어. 그 다음 곱셈을 해봐.',
     think: '나눗셈인데 왜 곱셈으로 바뀔까? "뒤집어 곱하기"가 왜 되는지 떠올려봐.',
   },
   {
-    id: 'fracdiv-5', unit: 'fracdiv', level: 2,
-    q: '2/3 ÷ 4/9 를 계산해봐.',
-    answer: '3/2', answerLabel: '3/2 ( = 1과 1/2 )',
-    hint1: '뒤 분수 4/9를 뒤집으면 9/4야.',
-    hint2: '2/3 × 9/4 를 약분하면서 계산해봐. 위아래에 공통인 수를 찾아봐.',
+    id: 'fracdiv-5', unit: 'fracdiv', level: 2, kind: 'calc',
+    q: '[[2/3]] ÷ [[4/9]] 를 계산해봐.',
+    answer: '3/2', answerLabel: '[[3/2]] ( = [[1_1/2]] )',
+    hint1: '뒤 분수를 뒤집은 다음 곱해봐.',
+    hint2: '곱하기로 바꾼 뒤, 위아래에 공통인 수로 약분하면서 계산해봐.',
     think: '계산 중간에 약분을 먼저 하면 어떤 점이 편할까?',
   },
   {
-    id: 'fracdiv-6', unit: 'fracdiv', level: 2,
-    q: '리본 5/6 m 를 한 사람에게 1/12 m 씩 나눠주면 몇 명에게 줄 수 있을까?',
+    id: 'fracdiv-6', unit: 'fracdiv', level: 3, kind: 'calc',
+    q: '[[1_1/3]] ÷ [[2/3]] 을 계산해봐.',
+    answer: '2', answerLabel: '2',
+    hint1: '대분수를 먼저 가분수로 바꿔봐.',
+    hint2: '대분수를 가분수로 바꾼 뒤, 뒤 분수를 뒤집어 곱해봐.',
+    think: '대분수를 가분수로 안 바꾸고 풀면 어떤 어려움이 생길까?',
+  },
+
+  // ── 문장제 (읽고 푸는 문제) ──
+  {
+    id: 'fracdiv-7', unit: 'fracdiv', level: 2, kind: 'word',
+    q: '리본 [[5/6]] m 를 한 사람에게 [[1/12]] m 씩 나눠주려고 해. 몇 명에게 줄 수 있을까?',
     answer: '10', answerLabel: '10명',
-    hint1: '"몇 명에게 줄 수 있을까"는 나눗셈이야. 5/6 ÷ 1/12 을 세워봐.',
-    hint2: '1/12을 뒤집어 곱하면 5/6 × 12 가 되겠지.',
+    hint1: '"몇 명에게 줄 수 있을까"는 전체를 한 사람 몫으로 나누는 거야. 나눗셈을 세워봐.',
+    hint2: '뒤 분수를 뒤집어 곱하면 계산이 쉬워져.',
     think: '나눈 결과가 원래 수보다 커졌어. 왜 그럴까?',
   },
   {
-    id: 'fracdiv-7', unit: 'fracdiv', level: 3,
-    q: '1과 1/3 ÷ 2/3 을 계산해봐.',
-    answer: '2', answerLabel: '2',
-    hint1: '대분수 1과 1/3을 먼저 가분수로 바꿔봐.',
-    hint2: '1과 1/3 = 4/3 이야. 이제 4/3 ÷ 2/3 을 풀어봐.',
-    think: '대분수를 가분수로 안 바꾸고 풀면 어떤 어려움이 생길까?',
+    id: 'fracdiv-8', unit: 'fracdiv', level: 2, kind: 'word',
+    q: '주스 [[3/4]] L 를 3명이 똑같이 나눠 마시면, 한 사람은 몇 L 를 마실까?',
+    answer: '1/4', answerLabel: '[[1/4]] L',
+    hint1: '"똑같이 나눠"는 나눗셈이야. 전체를 사람 수로 나눠봐.',
+    hint2: '분수를 자연수로 나누니까, 분모에 사람 수를 곱하는 방법을 떠올려봐.',
+    think: '나눈 결과가 원래보다 작아졌어. 문장제 상황과 잘 맞는지 생각해봐.',
   },
   {
-    id: 'fracdiv-8', unit: 'fracdiv', level: 3,
-    q: '물 2와 1/4 L 를 3/4 L 짜리 병에 나누어 담으면 몇 병이 될까?',
-    answer: '3', answerLabel: '3병',
-    hint1: '2와 1/4을 가분수로 바꾸면 9/4 야.',
-    hint2: '9/4 ÷ 3/4 을 풀어봐. 뒤집어 곱하면?',
+    id: 'fracdiv-9', unit: 'fracdiv', level: 3, kind: 'word',
+    q: '물 [[2_1/4]] L 를 [[3/4]] L 짜리 병에 가득 담으려고 해. 병 몇 개가 필요할까?',
+    answer: '3', answerLabel: '3개',
+    hint1: '전체 물을 한 병 용량으로 나누면 병의 수가 나와. 먼저 대분수를 가분수로 바꿔봐.',
+    hint2: '가분수로 바꾼 뒤 나눗셈을 하면 돼.',
     think: '분모가 같은 두 분수를 나눌 때, 더 빠른 방법이 보일까?',
+  },
+  {
+    id: 'fracdiv-10', unit: 'fracdiv', level: 3, kind: 'word',
+    q: '밀가루 [[6/7]] kg 으로 빵 한 개에 [[2/7]] kg 씩 쓰면, 빵을 몇 개 만들 수 있을까?',
+    answer: '3', answerLabel: '3개',
+    hint1: '전체 밀가루를 빵 하나에 드는 양으로 나눠봐.',
+    hint2: '분모가 같으니, 분자끼리만 생각해도 답이 보일 수 있어.',
+    think: '분모가 같은 분수의 나눗셈은 왜 분자끼리 나눈 것과 같을까?',
   },
 ];
